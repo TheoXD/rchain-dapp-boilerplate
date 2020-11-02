@@ -1,0 +1,7 @@
+{
+  "name": "rholang-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
