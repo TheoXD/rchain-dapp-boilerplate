@@ -12,6 +12,8 @@
         </ion-toolbar>
       </ion-header>
     
+        <ion-button @click="getLatestBlock">GetLatestBlock</ion-button>
+
       <ExploreContainer name="Tab 1 page" />
     </ion-content>
   </ion-page>
@@ -21,8 +23,20 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 import ExploreContainer from '@/components/ExploreContainer.vue';
 
-export default  {
+import * as rchainToolkit from 'rchain-toolkit';
+
+export default {
   name: 'Tab1',
-  components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
+  components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage },
+  setup() {
+      const getLatestBlock = async () => {
+        const latestBlock = JSON.parse(await rchainToolkit.http.blocks(`https://node0.testnet.rchain-dev.tk`, {
+            position: 1,
+        }));
+        console.info(latestBlock);
+      }
+
+      return {getLatestBlock}
+  }
 }
 </script>
