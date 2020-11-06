@@ -1,0 +1,24 @@
+new return(`rho:rchain:deployId`),
+  insertArbitrary(`rho:registry:insertArbitrary`), pizzaShop, uriCh in {
+    for (@url <- uriCh) {
+         return!(url)
+    }
+    |
+    insertArbitrary!(*pizzaShop, *uriCh)
+    |
+    contract pizzaShop(@order, replyChannel) = {
+        match (order) {
+            "large pepperoni" => {
+                replyChannel!({"price": 10,
+                     "pizza": order})
+            }
+            "small sausage" => {
+                replyChannel!({"price": 7,
+                     "pizza": order})
+            }
+            x => {
+                replyChannel!(["not on the menu", x])
+            }
+        }
+    }
+}
