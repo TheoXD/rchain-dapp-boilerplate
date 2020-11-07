@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Tab 1</ion-title>
+        <ion-title>pizzaShop</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content :fullscreen="true">
@@ -13,14 +13,16 @@
       </ion-header>
     
         <ion-card v-for="pizza in state.menu" :key="pizza">
-            <img src="/assets/papperoni.jpg">
+            <img :src="pizza.picture">
             <ion-card-header>
                 <h2>{{pizza.name}}</h2>
             </ion-card-header>
 
             <ion-card-content>
-                {{pizza.ingredients}}
-                <ion-button @click="placeOrder(pizza.name)">Place Order</ion-button>
+                <div>
+                    {{pizza.ingredients}}
+                </div>
+                <ion-button color="success" @click="placeOrder(pizza.name)">Place Order</ion-button>
             </ion-card-content>
         </ion-card>
 
@@ -35,6 +37,8 @@ import * as rchainToolkit from 'rchain-toolkit';
 
 import {reactive} from 'vue';
 
+import * as pizzaOrderingCode from "raw-loader!@/rholang/orderPizza.rho";
+
 export default {
   name: 'Tab1',
   props: {
@@ -46,11 +50,13 @@ export default {
             latestBlockNumber: "Get latest block",
             menu: [{
                 name: "Papperoni",
-                ingredients: "..."
+                ingredients: "...",
+                picture: "/assets/papperoni.jpg"
             },
             {
                 name: "Small Sausage",
-                ingredients: "..."
+                ingredients: "...",
+                picture: "/assets/sausage.jpg"
             }]
       });
 
@@ -59,24 +65,12 @@ export default {
             position: 1,
         }));
         state.latestBlockNumber = latestBlock[0].blockNumber;
+            console.info(pizzaOrderingCode.default.replace("<<ORDER>>", name.toLowerCase()).replace("<<URI>>", "rho:id:t6owcw7yuz57cn6zwt7cwjeqdczeyyzhwprajdbz1rppa3obuuwwn8"));
 
           const deployOptions = rchainToolkit.utils.getDeployOptions(
             "secp256k1",
             new Date().valueOf(),
-            `new return(\`rho:rchain:deployId\`),
-            lookup(\`rho:registry:lookup\`)
-            in {
-            new valueCh, result in {
-                lookup!("rho:id:t6owcw7yuz57cn6zwt7cwjeqdczeyyzhwprajdbz1rppa3obuuwwn8" , *valueCh) |
-                for (pizzaShop <- valueCh) {
-                pizzaShop!("${name.toLowerCase()}", *result)
-                | 
-                for (@order <- result) {
-                    return!(order)
-                }
-                }
-            }
-            }`,
+            pizzaOrderingCode.default.replace("<<ORDER>>", name.toLowerCase()).replace("<<URI>>", "rho:id:t6owcw7yuz57cn6zwt7cwjeqdczeyyzhwprajdbz1rppa3obuuwwn8"),
             "e9934d79b12317d0f3dad7f915c1cc075a47cbd884fd80d7dfeefacf03fa214e",
             "0420d065ce52c1759e467b9427f494ff665210d226967e68b65eee180a96a3148fe849d1f105a7f130db938b48eb6c28f20dd530365aaeb39af8bfc00117684b18",
             1,

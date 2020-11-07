@@ -2,9 +2,9 @@ new return(`rho:rchain:deployId`),
   lookup(`rho:registry:lookup`)
 in {
   new valueCh, result in {
-    lookup!("rho:id:t6owcw7yuz57cn6zwt7cwjeqdczeyyzhwprajdbz1rppa3obuuwwn8" , *valueCh) |
+    lookup!("<<URI>>" , *valueCh) |
     for (pizzaShop <- valueCh) {
-      pizzaShop!("large pepperoni", *result)
+      pizzaShop!("<<ORDER>>", *result)
       | 
       for (@order <- result) {
         return!(order)
