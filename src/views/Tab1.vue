@@ -30,14 +30,16 @@
   </ion-page>
 </template>
 
-<script>
+<script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
 
 import * as rchainToolkit from 'rchain-toolkit';
 
-import {reactive} from 'vue';
+import { reactive } from 'vue';
 
 import * as pizzaOrderingCode from "raw-loader!@/rholang/orderPizza.rho";
+
+import { PizzaType } from '@/types';
 
 export default {
   name: 'Tab1',
@@ -57,7 +59,7 @@ export default {
                 name: "Small Sausage",
                 ingredients: "...",
                 picture: "/assets/sausage.jpg"
-            }]
+            }] as Array<PizzaType>
       });
 
       const placeOrder = async (name) => {
@@ -65,7 +67,8 @@ export default {
             position: 1,
         }));
         state.latestBlockNumber = latestBlock[0].blockNumber;
-            console.info(pizzaOrderingCode.default.replace("<<ORDER>>", name.toLowerCase()).replace("<<URI>>", "rho:id:t6owcw7yuz57cn6zwt7cwjeqdczeyyzhwprajdbz1rppa3obuuwwn8"));
+        
+        console.info(pizzaOrderingCode.default.replace("<<ORDER>>", name.toLowerCase()).replace("<<URI>>", "rho:id:t6owcw7yuz57cn6zwt7cwjeqdczeyyzhwprajdbz1rppa3obuuwwn8"));
 
           const deployOptions = rchainToolkit.utils.getDeployOptions(
             "secp256k1",
@@ -77,6 +80,7 @@ export default {
             100000,
             state.latestBlockNumber
         );
+
         try {
             const response = await rchainToolkit.http.deploy(
                 "https://node0.testnet.rchain-dev.tk",
@@ -87,6 +91,7 @@ export default {
         catch(err) {
             console.err(err);
         }
+
       }
 
       return {state, placeOrder}

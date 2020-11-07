@@ -1,0 +1,19 @@
+new return(`rho:rchain:deployId`),
+  insertArbitrary(`rho:registry:insertArbitrary`)
+in {
+  new uriCh, valueCh in {
+    insertArbitrary!([{
+                "name": "Papperoni",
+                "ingredients": "...",
+                "picture": "/assets/papperoni.jpg"
+            },
+            {
+                "name": "Small Sausage",
+                "ingredients": "...",
+                "picture": "/assets/sausage.jpg"
+            }], *uriCh) |
+    for (@uri <- uriCh) {
+      return!(("URI", uri))
+    }
+  }
+}
